@@ -11,7 +11,7 @@ spring:
 
           uri: http://localhost:8080
           predicates:
-            - Path=/api/users
+            - Path=/api/users/**
           filters:
             - StripPrefix=0
             - AddRequestHeader=X-Gateway-Request, true
