@@ -1,0 +1,38 @@
+server:
+  port: 8082 # Порт, на котором будет работать Gateway
+
+spring:
+  application:
+    name: gateway-service
+  cloud:
+    gateway:
+      routes:
+        - id: user_crud_route # Уникальный ID маршрута
+          # URI, куда направлять запросы
+          # Вариант 1: Через Service Discovery (предпочтительно в микросервисах)
+          # 'lb://' означает "load balance" и использует имя сервиса в Service Discovery
+          uri: lb://USER-CRUD-SERVICE # Имя вашего CRUD сервиса в Eureka/Consul
+          predicates:
+            - Path=/api/users/Ⓑ # Все запросы, начинающиеся с /api/users, будут маршрутизированы
+          filters:
+            - StripPrefix=0 # Удалить префикс из пути перед отправкой на backend
+            # Пример: запрос /api/users/123 -> на backend пойдет /api/users/123
+            # Если backend ожидает /users/123, используйте StripPrefix=1
+            - AddRequestHeader=X-Gateway-Request, true # Добавить кастомный заголовок
+            # - RewritePath=/api/users/(?<segment>.*), /v1/users/$\{segment} # Пример: /api/users/1 -> /v1/users/1
+        # Вы можете добавить другие маршруты для других сервисов:
+        # - id: product_service_route
+        #   uri: lb://PRODUCT-SERVICE
+        #   predicates:
+        #     - Path=/api/products/Ⓑ
+
+# Конфигурация Eureka Client (если используете Service Discovery)
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/ # Адрес вашего Eureka Server
+  instance:
+    hostname: localhost # Имя хоста для регистрации в Eureka
+    # instance-id: ${spring.application.name}:${random.value} # Уникальный ID экземпляра
+
+
