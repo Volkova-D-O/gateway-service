@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+    gateway-service:
+        hostname: gateway-service
+        container_name: gateway-service
+        build:
+            context: .
+            dockerfile: dockerfile-gateway-service
+        ports:
+        - "8082:8082"
+        networks: 
+          - my_shared_kafka_network 
+        
+
+
+networks:
+    my_shared_kafka_network:
+        name: "kafka-folder_default"
+        external: true

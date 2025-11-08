@@ -1,0 +1,5 @@
+FROM eclipse-temurin:21-jdk
+WORKDIR /gateway-service 
+COPY ./target/gateway-service-0.0.1-SNAPSHOT.jar gate.jar
+ENTRYPOINT ["java", "-jar", "gate.jar"]
+EXPOSE 8082
